@@ -1,6 +1,5 @@
 import requests
 from bs4 import BeautifulSoup
-import pdb
 
 res=requests.get('https://news.ycombinator.com/news')
 soup=BeautifulSoup(res.text,'html.parser')
@@ -9,6 +8,10 @@ soup=BeautifulSoup(res.text,'html.parser')
 links=soup.select('.storylink')
 votes=soup.select('.score')
 subtext=soup.select('.subtext')
+
+def sort_stories_by_vote(hnlist):
+    return sorted(hnlist, key=lambda k:k['vote'],reverse=True)
+
 
 def create_custome_hn(links,subtext):
     hn=[]
@@ -20,7 +23,9 @@ def create_custome_hn(links,subtext):
             points=int(vote[0].getText().replace(' points',''))
             if points >99:
                 hn.append({'title':title,'link':href,'vote':points})
-    return hn
+    return sort_stories_by_vote(hn)
+
+
 
 
 
